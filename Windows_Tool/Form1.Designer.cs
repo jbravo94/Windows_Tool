@@ -43,7 +43,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Refresh = new System.Windows.Forms.Button();
+            this.RefreshServices = new System.Windows.Forms.Button();
             this.Save = new System.Windows.Forms.Button();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -153,7 +153,7 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.Save);
-            this.tabPage3.Controls.Add(this.Refresh);
+            this.tabPage3.Controls.Add(this.RefreshServices);
             this.tabPage3.Controls.Add(this.textBox2);
             this.tabPage3.Controls.Add(this.dataGridView2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
@@ -206,14 +206,14 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Width = 135;
             // 
-            // Refresh
+            // RefreshServices
             // 
-            this.Refresh.Location = new System.Drawing.Point(38, 200);
-            this.Refresh.Name = "Refresh";
-            this.Refresh.Size = new System.Drawing.Size(137, 31);
-            this.Refresh.TabIndex = 4;
-            this.Refresh.Text = "Refresh";
-            this.Refresh.UseVisualStyleBackColor = true;
+            this.RefreshServices.Location = new System.Drawing.Point(38, 200);
+            this.RefreshServices.Name = "RefreshServices";
+            this.RefreshServices.Size = new System.Drawing.Size(137, 31);
+            this.RefreshServices.TabIndex = 4;
+            this.RefreshServices.Text = "Refresh";
+            this.RefreshServices.UseVisualStyleBackColor = true;
             // 
             // Save
             // 
@@ -274,7 +274,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.Button Save;
-        private System.Windows.Forms.Button Refresh;
+        private System.Windows.Forms.Button RefreshServices;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;

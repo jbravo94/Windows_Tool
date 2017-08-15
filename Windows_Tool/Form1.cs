@@ -13,7 +13,9 @@ using System.Windows.Forms;
 using IWshRuntimeLibrary;
 //using Microsoft.WindowsAPICodePack.Net;
 //using Microsoft.SDK.Samples.VistaBridge.Library.Network;
-
+using System.ServiceProcess;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Windows_Tool
 {
@@ -24,11 +26,13 @@ namespace Windows_Tool
         private List<NetworkInterfaceInfo> NetworkInterfaceInfos = new List<NetworkInterfaceInfo> ();
         private String ApplicationPath;
         private String ApplicationName;
+        private List<ServiceInfo> ServiceInfos = new List<ServiceInfo>();
 
         public Form1()
         {
             InitializeComponent();
             UpdateIPList();
+            UpdateServiceList();
         }
 
 
@@ -72,10 +76,10 @@ namespace Windows_Tool
 
                 NetworkInterfaceInfos = temp;
 
-                this.dataGridView1.Rows.Clear();
+                dataGridView1.Rows.Clear();
                 foreach (NetworkInterfaceInfo i in NetworkInterfaceInfos)
                 {
-                    this.dataGridView1.Rows.Add(i.Name, i.Address);
+                    dataGridView1.Rows.Add(i.Name, i.Address);
                 }
 
             }
@@ -250,7 +254,90 @@ namespace Windows_Tool
 
         }
 
+
+        private void UpdateServiceList()
+        {
+            dataGridView2.Rows.Clear();
+
+            foreach (ServiceController service in ServiceController.GetServices())
+            {
+                string serviceName = service.ServiceName;
+                string serviceDisplayName = service.DisplayName;
+                string serviceType = service.ServiceType.ToString();
+                string status = service.Status.ToString();
+
+
+
+                bool stat = false;
+
+                if (status == "Running")
+                {
+                    stat = true;
+                }
+
+                ServiceInfo SI = new ServiceInfo { serviceName = serviceName, serviceDisplayName = serviceDisplayName, serviceType = serviceType, status = status, stat = stat };
+
+                ServiceInfos.Add(SI);
+
+                dataGridView2.Rows.Add(serviceName, status, stat);
+
+                //Console.WriteLine(serviceName + " " + serviceDisplayName + serviceType + " " + status);
+            }
+        }
+
+
         private void RefreshServices_Click(object sender, EventArgs e)
+        {
+            UpdateServiceList();
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+            dataGridView2.Rows.Clear();
+
+            string searchString = textBox2.Text;
+
+            
+            Regex r = new Regex(searchString, RegexOptions.IgnoreCase);
+
+            foreach (ServiceInfo i in ServiceInfos)
+            {
+                Match m = r.Match(i.serviceName);
+                if (m.Success)
+                //if(i.serviceName.Contains(searchString))
+                {
+                    dataGridView2.Rows.Add(i.serviceName, i.status, i.stat);
+                }
+
+            }
+
+            /*
+            Textbox myTxtbx = new Textbox();
+            myTxtbx.Text = "Enter text here...";
+
+            myTxtbx.GotFocus += GotFocus.EventHandle(RemoveText);
+            myTxtbx.LostFocus += LostFocus.EventHandle(AddText);
+
+            public RemoveText(object sender, EventArgs e)
+            {
+                myTxtbx.Text = "";
+            }
+
+            public AddText(object sender, EventArgs e)
+            {
+                if (String.IsNullOrWhiteSpace(myTxtbx.Text))
+                    myTxtbx.Text = "Enter text here...";
+            }
+            */
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
         {
 
         }

@@ -10,6 +10,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using IWshRuntimeLibrary;
 //using Microsoft.WindowsAPICodePack.Net;
 //using Microsoft.SDK.Samples.VistaBridge.Library.Network;
 
@@ -21,6 +22,8 @@ namespace Windows_Tool
     {
 
         private List<NetworkInterfaceInfo> NetworkInterfaceInfos = new List<NetworkInterfaceInfo> ();
+        private String ApplicationPath;
+        private String ApplicationName;
 
         public Form1()
         {
@@ -125,7 +128,7 @@ namespace Windows_Tool
 
         private void Choose_Click(object sender, EventArgs e)
         {
-            Stream myStream = null;
+           
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
             openFileDialog1.InitialDirectory = "C:\\";
@@ -137,24 +140,22 @@ namespace Windows_Tool
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 Console.WriteLine(openFileDialog1.FileName);
+                Console.WriteLine(openFileDialog1.SafeFileName);
                 textBox1.Text = openFileDialog1.FileName;
+                ApplicationPath = openFileDialog1.FileName;
+                String[] substrings = openFileDialog1.SafeFileName.Split('.');
+                ApplicationName = substrings[0];
             }
         }
+        
+        
+
         /*
         public static void CreateShortcut(string SourceFile, string ShortcutFile)
         {
             CreateShortcut(SourceFile, ShortcutFile, null, null, null, null);
         }
 
-        /// <summary>
-        /// Create Windows Shorcut
-        /// </summary>
-        /// <param name="SourceFile">A file you want to make shortcut to</param>
-        /// <param name="ShortcutFile">Path and shorcut file name including file extension (.lnk)</param>
-        /// <param name="Description">Shortcut description</param>
-        /// <param name="Arguments">Command line arguments</param>
-        /// <param name="HotKey">Shortcut hot key as a string, for example "Ctrl+F"</param>
-        /// <param name="WorkingDirectory">"Start in" shorcut parameter</param>
         public static void CreateShortcut(string TargetPath, string ShortcutFile, string Description,
            string Arguments, string HotKey, string WorkingDirectory)
         {
@@ -165,7 +166,7 @@ namespace Windows_Tool
                 throw new ArgumentNullException("ShortcutFile");
 
             // Create WshShellClass instance:
-            var wshShell = new WshShellClass();
+            var wshShell = new WshShell();
 
             // Create shortcut object:
             IWshRuntimeLibrary.IWshShortcut shorcut = (IWshRuntimeLibrary.IWshShortcut)wshShell.CreateShortcut(ShortcutFile);
@@ -186,11 +187,46 @@ namespace Windows_Tool
         */
         private void AddToAutostart_Click(object sender, EventArgs e)
         {
+
+            try
+            {
+
+                WshShell wshShell = new WshShell();
+                IWshRuntimeLibrary.IWshShortcut shortcut;
+                string startUpFolderPath =
+                  Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+
+                // Create the shortcut
+                shortcut =
+                  (IWshRuntimeLibrary.IWshShortcut)wshShell.CreateShortcut(
+                    startUpFolderPath + "\\" +
+                    ApplicationName + ".lnk");
+
+                shortcut.TargetPath = ApplicationPath;
+                shortcut.WorkingDirectory = Application.StartupPath;
+                shortcut.Description = "Launch My Application";
+                // shortcut.IconLocation = Application.StartupPath + @"\App.ico";
+                shortcut.Save();
+
+                Status_label.Text = "Success";
+                Status_label.ForeColor = Color.Green;
+                //pictureBox1.Image = Image.FromFile(Application."greencircle.png");
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Status_label.Text = "Failed";
+                Status_label.ForeColor = Color.Red;
+            }
+
             /*
+
+
             // Make sure you use try/catch block because your App may has no permissions on the target path!
             try
             {
-                CreateShortcut(@"C:\temp", @"C:\MyShortcutFile.lnk",
+                CreateShortcut(@"C:\temp", @"C:\Users\Johnny\AppData\Roaming\Microsoft\MyShortcutFile.lnk",
                     "Custom Shortcut", "/param", "Ctrl+F", @"c:\");
             }
             catch (Exception ex)
@@ -199,18 +235,24 @@ namespace Windows_Tool
             }
 
 
+    */
 
-            /// <summary>
-            /// Create Windows Shorcut
-            /// </summary>
-            /// <param name="SourceFile">A file you want to make shortcut to</param>
-            /// <param name="ShortcutFile">Path and shorcut file name including file extension (.lnk)</param>
-            
-            */
+
+
 
 
 
             //C: \Users\Johnny\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Autostart
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RefreshServices_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
